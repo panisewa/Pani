@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useLocale, useTranslations } from 'next-intl'
@@ -13,10 +14,20 @@ import {
   Settings,
   LogOut,
   Globe,
+  Menu,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/lib/auth-store'
 import axios from 'axios'
+import { Sheet, SheetContent } from '@/components/ui/sheet'
+
+function WaterLogo() {
+  return (
+    <svg className="w-7 h-7 text-primary shrink-0" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 2C6.5 11 4 15 4 17.5a8 8 0 0 0 16 0C20 15 17.5 11 12 2z" />
+    </svg>
+  )
+}
 
 export function SidebarNav() {
   const t = useTranslations('nav')
@@ -24,6 +35,7 @@ export function SidebarNav() {
   const pathname = usePathname()
   const router = useRouter()
   const { user, clearAuth } = useAuthStore()
+  const [mobileOpen, setMobileOpen] = useState(false)
 
   const navItems = [
     { href: '/dashboard', label: t('dashboard'), icon: LayoutDashboard },
@@ -44,71 +56,110 @@ export function SidebarNav() {
     router.push(`/${locale}/login`)
   }
 
+  const NavLinks = ({ onLinkClick }: { onLinkClick?: () => void }) => (
+    <nav className="flex-1 px-2 py-3 space-y-0.5 overflow-y-auto" aria-label="Main navigation">
+      {navItems.map(({ href, label, icon: Icon }) => {
+        const fullHref = `/${locale}${href}`
+        const active = pathname.startsWith(fullHref)
+        return (
+          <Link
+            key={href}
+            href={fullHref}
+            onClick={onLinkClick}
+            className={cn(
+              'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-150',
+              active
+                ? 'bg-blue-50 text-primary'
+                : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+            )}
+            aria-current={active ? 'page' : undefined}
+          >
+            <Icon className="w-4 h-4 shrink-0" aria-hidden="true" />
+            {label}
+          </Link>
+        )
+      })}
+    </nav>
+  )
+
+  const LangSwitch = ({ onLinkClick }: { onLinkClick?: () => void }) => (
+    <div className="px-2 pb-2">
+      <Link
+        href={switchPath}
+        onClick={onLinkClick}
+        className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-700 transition-colors duration-150 w-full"
+      >
+        <Globe className="w-4 h-4 shrink-0" />
+        {t('switchLanguage')}
+      </Link>
+    </div>
+  )
+
+  const UserFooter = () => (
+    <div className="border-t border-slate-200 p-3">
+      {user && (
+        <div className="px-3 py-1.5 mb-1">
+          <p className="text-xs font-medium text-slate-900 truncate">
+            {user.firstName} {user.lastName}
+          </p>
+          <p className="text-xs text-slate-500 truncate">{user.email}</p>
+        </div>
+      )}
+      <button
+        onClick={handleLogout}
+        className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors duration-150 cursor-pointer"
+      >
+        <LogOut className="w-4 h-4 shrink-0" aria-hidden="true" />
+        {t('signOut')}
+      </button>
+    </div>
+  )
+
   return (
-    <aside className="w-60 shrink-0 bg-white border-r border-slate-200 flex flex-col">
-      {/* Logo */}
-      <div className="h-16 flex items-center gap-2 px-4 border-b border-slate-200">
-        <svg className="w-7 h-7 text-primary" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-          <path d="M12 2C6.5 11 4 15 4 17.5a8 8 0 0 0 16 0C20 15 17.5 11 12 2z" />
-        </svg>
-        <span className="font-bold text-slate-900">
-          {locale === 'ne' ? 'पानीसेवा' : 'Panisewa'}
-        </span>
-      </div>
-
-      {/* Nav */}
-      <nav className="flex-1 px-2 py-3 space-y-0.5" aria-label="Main navigation">
-        {navItems.map(({ href, label, icon: Icon }) => {
-          const fullHref = `/${locale}${href}`
-          const active = pathname.startsWith(fullHref)
-          return (
-            <Link
-              key={href}
-              href={fullHref}
-              className={cn(
-                'flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors duration-150 cursor-pointer',
-                active
-                  ? 'bg-blue-50 text-primary'
-                  : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-              )}
-              aria-current={active ? 'page' : undefined}
-            >
-              <Icon className="w-4 h-4 shrink-0" aria-hidden="true" />
-              {label}
-            </Link>
-          )
-        })}
-      </nav>
-
-      {/* Language switcher */}
-      <div className="px-2 pb-2">
-        <Link
-          href={switchPath}
-          className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-700 transition-colors duration-150 w-full"
-        >
-          <Globe className="w-4 h-4 shrink-0" />
-          {t('switchLanguage')}
-        </Link>
-      </div>
-
-      {/* User + logout */}
-      <div className="border-t border-slate-200 p-3">
-        {user && (
-          <div className="px-3 py-1.5 mb-1">
-            <p className="text-xs font-medium text-slate-900 truncate">
-              {user.firstName} {user.lastName}
-            </p>
-            <p className="text-xs text-slate-500 truncate">{user.email}</p>
-          </div>
-        )}
+    <>
+      {/* Mobile top bar */}
+      <header className="md:hidden h-14 bg-white border-b border-slate-200 flex items-center gap-3 px-4 shrink-0">
         <button
-          onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors duration-150 cursor-pointer"
+          onClick={() => setMobileOpen(true)}
+          className="p-1.5 rounded-md text-slate-600 hover:bg-slate-50"
+          aria-label="Open navigation"
         >
-          <LogOut className="w-4 h-4 shrink-0" aria-hidden="true" />
-          {t('signOut')}
+          <Menu className="w-5 h-5" />
         </button>
-      </div>
-    </aside>
+        <div className="flex items-center gap-2">
+          <WaterLogo />
+          <span className="font-bold text-slate-900">
+            {locale === 'ne' ? 'पानीसेवा' : 'Panisewa'}
+          </span>
+        </div>
+
+        <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+          <SheetContent side="left" className="p-0 flex flex-col w-72 max-w-[80vw]">
+            <div className="h-16 flex items-center gap-2 px-4 border-b border-slate-200 shrink-0">
+              <WaterLogo />
+              <span className="font-bold text-slate-900">
+                {locale === 'ne' ? 'पानीसेवा' : 'Panisewa'}
+              </span>
+            </div>
+            <NavLinks onLinkClick={() => setMobileOpen(false)} />
+            <LangSwitch onLinkClick={() => setMobileOpen(false)} />
+            <UserFooter />
+          </SheetContent>
+        </Sheet>
+      </header>
+
+      {/* Desktop sidebar */}
+      <aside className="hidden md:flex w-60 shrink-0 bg-white border-r border-slate-200 flex-col">
+        <div className="h-16 flex items-center gap-2 px-4 border-b border-slate-200 shrink-0">
+          <WaterLogo />
+          <span className="font-bold text-slate-900">
+            {locale === 'ne' ? 'पानीसेवा' : 'Panisewa'}
+          </span>
+        </div>
+        <NavLinks />
+        <LangSwitch />
+        <UserFooter />
+      </aside>
+    </>
   )
 }

@@ -78,6 +78,7 @@ export default function ProductsPage() {
         ) : products.length === 0 ? (
           <div className="p-10 text-center text-sm text-slate-500">{t('noProducts')}</div>
         ) : (
+          <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-200 bg-slate-50">
@@ -124,6 +125,7 @@ export default function ProductsPage() {
               ))}
             </tbody>
           </table>
+          </div>
         )}
       </div>
 
