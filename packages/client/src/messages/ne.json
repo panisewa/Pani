@@ -92,7 +92,11 @@
     "allLevelsOk": "सबै स्तर ठीक छ",
     "needsRestocking": "स्टक भर्नु पर्छ",
     "lowStockAlert": "{count} उत्पादन पुनःअर्डर सीमाभन्दा कम छ।",
-    "viewProducts": "उत्पादन हेर्नुहोस्"
+    "viewProducts": "उत्पादन हेर्नुहोस्",
+    "orderPipeline": "अर्डर पाइपलाइन",
+    "recentOrders": "हालका अर्डरहरू",
+    "viewAll": "सबै हेर्नुहोस्",
+    "noRecentOrders": "अहिलेसम्म कुनै अर्डर छैन"
   },
   "orders": {
     "title": "अर्डरहरू",

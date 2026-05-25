@@ -92,7 +92,11 @@
     "allLevelsOk": "All levels OK",
     "needsRestocking": "Needs restocking",
     "lowStockAlert": "{count} product(s) below reorder level.",
-    "viewProducts": "View products"
+    "viewProducts": "View products",
+    "orderPipeline": "Order Pipeline",
+    "recentOrders": "Recent Orders",
+    "viewAll": "View all",
+    "noRecentOrders": "No orders yet"
   },
   "orders": {
     "title": "Orders",
