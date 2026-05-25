@@ -111,7 +111,7 @@ export function OrderDetailSheet({ orderId, onOpenChange }: Props) {
           await api.post(`/orders/${orderId}/confirm`, {})
           break
         case OrderStatus.CONFIRMED:
-          if (!selectedDriverId) { toast.error('Select a driver first'); setIsSaving(false); return }
+          if (!selectedDriverId) { toast.error(t('selectDriverFirst')); setIsSaving(false); return }
           await api.post(`/orders/${orderId}/assign-driver`, { driver_id: selectedDriverId })
           setSelectedDriverId('')
           break

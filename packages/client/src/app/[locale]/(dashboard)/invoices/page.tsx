@@ -131,7 +131,7 @@ export default function InvoicesPage() {
             </div>
             <div>
               <p className="text-sm font-medium text-slate-700">
-                {search ? t('noInvoices') : t('noInvoices')}
+                {search ? t('noInvoicesFiltered') : t('noInvoices')}
               </p>
               {!search && !statusFilter && (
                 <p className="text-xs text-slate-400 mt-1">{t('noInvoicesEmpty')}</p>
