@@ -1,6 +1,7 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
+import { useTranslations } from 'next-intl'
 import { api } from '@/lib/api'
 import { formatPaisa } from '@panisewa/shared'
 import { ShoppingCart, TrendingUp, AlertTriangle, Users, Clock, Truck } from 'lucide-react'
@@ -55,6 +56,7 @@ function KpiCard({
 }
 
 export default function DashboardPage() {
+  const t = useTranslations('dashboard')
   const { data, isLoading } = useQuery<SingleResponse<DashboardStats>>({
     queryKey: ['dashboard-stats'],
     queryFn: async () => {
@@ -69,7 +71,7 @@ export default function DashboardPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Dashboard</h1>
+        <h1 className="text-2xl font-bold text-slate-900">{t('title')}</h1>
         <p className="text-sm text-slate-500 mt-0.5">
           {new Date().toLocaleDateString('en-NP', {
             weekday: 'long',
@@ -82,43 +84,43 @@ export default function DashboardPage() {
 
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
         <KpiCard
-          label="Orders Today"
+          label={t('ordersToday')}
           value={stats?.ordersToday ?? 0}
           icon={<ShoppingCart className="w-4 h-4" />}
-          sub="Created in last 24h"
+          sub={t('createdLast24h')}
           loading={isLoading}
         />
         <KpiCard
-          label="Revenue Today"
+          label={t('revenueToday')}
           value={stats ? formatPaisa(stats.revenueToday) : '—'}
           icon={<TrendingUp className="w-4 h-4" />}
-          sub="Delivered orders only"
+          sub={t('deliveredOnly')}
           loading={isLoading}
         />
         <KpiCard
-          label="Pending Orders"
+          label={t('pendingOrders')}
           value={stats?.pendingOrders ?? 0}
           icon={<Clock className="w-4 h-4" />}
-          sub="Draft + Confirmed + Assigned"
+          sub={t('draftConfirmedAssigned')}
           loading={isLoading}
         />
         <KpiCard
-          label="Active Drivers"
+          label={t('activeDrivers')}
           value={stats?.activeDrivers ?? 0}
           icon={<Truck className="w-4 h-4" />}
           loading={isLoading}
         />
         <KpiCard
-          label="Total Customers"
+          label={t('totalCustomers')}
           value={stats?.totalCustomers ?? 0}
           icon={<Users className="w-4 h-4" />}
           loading={isLoading}
         />
         <KpiCard
-          label="Low Stock Items"
+          label={t('lowStockItems')}
           value={stats?.lowStockCount ?? 0}
           icon={<AlertTriangle className="w-4 h-4" />}
-          sub={stats?.lowStockCount ? 'Needs restocking' : 'All levels OK'}
+          sub={stats?.lowStockCount ? t('needsRestocking') : t('allLevelsOk')}
           alert={(stats?.lowStockCount ?? 0) > 0}
           loading={isLoading}
         />
@@ -128,7 +130,7 @@ export default function DashboardPage() {
         <div className="flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-sm">
           <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
           <span className="text-amber-800 font-medium">
-            {stats!.lowStockCount} product{stats!.lowStockCount > 1 ? 's' : ''} below reorder level.
+            {t('lowStockAlert', { count: stats!.lowStockCount })}
           </span>
         </div>
       )}

@@ -1,13 +1,15 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { Truck } from 'lucide-react'
 
 export default function DriversPage() {
+  const t = useTranslations('drivers')
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Drivers</h1>
-        <p className="text-sm text-slate-500 mt-0.5">Manage your delivery team</p>
+        <h1 className="text-2xl font-bold text-slate-900">{t('title')}</h1>
+        <p className="text-sm text-slate-500 mt-0.5">{t('subtitle')}</p>
       </div>
 
       <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-10 flex flex-col items-center gap-4 text-center">
@@ -15,9 +17,9 @@ export default function DriversPage() {
           <Truck className="w-7 h-7 text-slate-400" />
         </div>
         <div>
-          <p className="font-medium text-slate-900">Driver management coming soon</p>
+          <p className="font-medium text-slate-900">{t('comingSoon')}</p>
           <p className="text-sm text-slate-500 mt-1">
-            Invite drivers via Settings → Team Members. Driver accounts are assigned the DRIVER role and appear on order assignment.
+            {t('comingSoonDesc')}
           </p>
         </div>
       </div>

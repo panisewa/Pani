@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { useTranslations } from 'next-intl'
 import { api } from '@/lib/api'
 import { formatPaisa } from '@panisewa/shared'
 import { InvoiceStatus } from '@panisewa/shared'
@@ -16,6 +17,15 @@ const STATUS_STYLES: Record<InvoiceStatus, string> = {
 }
 
 export default function InvoicesPage() {
+  const t = useTranslations('invoices')
+  const tCommon = useTranslations('common')
+  const STATUS_LABELS: Record<InvoiceStatus, string> = {
+    DRAFT: t('statusLabels.DRAFT'),
+    SENT: t('statusLabels.SENT'),
+    PAID: t('statusLabels.PAID'),
+    OVERDUE: t('statusLabels.OVERDUE'),
+    CANCELLED: t('statusLabels.CANCELLED'),
+  }
   const [statusFilter, setStatusFilter] = useState<InvoiceStatus | ''>('')
   const [page, setPage] = useState(1)
 
@@ -35,8 +45,8 @@ export default function InvoicesPage() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Invoices</h1>
-        <p className="text-sm text-slate-500 mt-0.5">{total} total invoices</p>
+        <h1 className="text-2xl font-bold text-slate-900">{t('title')}</h1>
+        <p className="text-sm text-slate-500 mt-0.5">{t('totalInvoices', { count: total })}</p>
       </div>
 
       {/* Status filter tabs */}
@@ -49,7 +59,7 @@ export default function InvoicesPage() {
               : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
           }`}
         >
-          All
+          {tCommon('all')}
         </button>
         {Object.values(InvoiceStatus).map((s) => (
           <button
@@ -61,7 +71,7 @@ export default function InvoicesPage() {
                 : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
             }`}
           >
-            {s.charAt(0) + s.slice(1).toLowerCase()}
+            {STATUS_LABELS[s]}
           </button>
         ))}
       </div>
@@ -74,20 +84,20 @@ export default function InvoicesPage() {
             ))}
           </div>
         ) : isError ? (
-          <div className="p-6 text-sm text-red-600">Failed to load invoices.</div>
+          <div className="p-6 text-sm text-red-600">{t('failedToLoad')}</div>
         ) : invoices.length === 0 ? (
-          <div className="p-10 text-center text-sm text-slate-500">No invoices found.</div>
+          <div className="p-10 text-center text-sm text-slate-500">{t('noInvoices')}</div>
         ) : (
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-200 bg-slate-50">
-                <th className="text-left px-4 py-3 font-medium text-slate-600">Invoice #</th>
-                <th className="text-left px-4 py-3 font-medium text-slate-600">BS Date</th>
-                <th className="text-left px-4 py-3 font-medium text-slate-600">Status</th>
-                <th className="text-right px-4 py-3 font-medium text-slate-600">Subtotal</th>
-                <th className="text-right px-4 py-3 font-medium text-slate-600">VAT</th>
-                <th className="text-right px-4 py-3 font-medium text-slate-600">Total</th>
-                <th className="text-left px-4 py-3 font-medium text-slate-600">Due Date</th>
+                <th className="text-left px-4 py-3 font-medium text-slate-600">{t('invoiceNumber')}</th>
+                <th className="text-left px-4 py-3 font-medium text-slate-600">{t('bsDate')}</th>
+                <th className="text-left px-4 py-3 font-medium text-slate-600">{t('status')}</th>
+                <th className="text-right px-4 py-3 font-medium text-slate-600">{t('subtotal')}</th>
+                <th className="text-right px-4 py-3 font-medium text-slate-600">{t('vat')}</th>
+                <th className="text-right px-4 py-3 font-medium text-slate-600">{t('total')}</th>
+                <th className="text-left px-4 py-3 font-medium text-slate-600">{t('dueDate')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -99,7 +109,7 @@ export default function InvoicesPage() {
                   </td>
                   <td className="px-4 py-3">
                     <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${STATUS_STYLES[inv.status]}`}>
-                      {inv.status.charAt(0) + inv.status.slice(1).toLowerCase()}
+                      {STATUS_LABELS[inv.status]}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-right font-mono text-slate-600">{formatPaisa(inv.subtotal)}</td>
@@ -119,21 +129,21 @@ export default function InvoicesPage() {
 
       {total > 20 && (
         <div className="flex items-center justify-between text-sm text-slate-600">
-          <span>Page {page} of {Math.ceil(total / 20)}</span>
+          <span>{tCommon('pageOf', { page, total: Math.ceil(total / 20) })}</span>
           <div className="flex gap-2">
             <button
               disabled={page === 1}
               onClick={() => setPage((p) => p - 1)}
               className="px-3 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              Previous
+              {tCommon('previous')}
             </button>
             <button
               disabled={page >= Math.ceil(total / 20)}
               onClick={() => setPage((p) => p + 1)}
               className="px-3 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              Next
+              {tCommon('next')}
             </button>
           </div>
         </div>

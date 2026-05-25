@@ -1,10 +1,13 @@
 'use client'
 
 import { useQuery } from '@tanstack/react-query'
+import { useTranslations } from 'next-intl'
 import { api } from '@/lib/api'
 import type { ITenant, SingleResponse } from '@/lib/api-types'
 
 export default function SettingsPage() {
+  const t = useTranslations('settings')
+  const tCommon = useTranslations('common')
   const { data, isLoading, isError } = useQuery<SingleResponse<ITenant>>({
     queryKey: ['tenant'],
     queryFn: async () => {
@@ -18,7 +21,7 @@ export default function SettingsPage() {
   if (isLoading) {
     return (
       <div className="space-y-5">
-        <h1 className="text-2xl font-bold text-slate-900">Settings</h1>
+        <h1 className="text-2xl font-bold text-slate-900">{t('title')}</h1>
         <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-6 space-y-4">
           {[...Array(6)].map((_, i) => (
             <div key={i} className="h-8 bg-slate-100 rounded animate-pulse" />
@@ -31,9 +34,9 @@ export default function SettingsPage() {
   if (isError) {
     return (
       <div className="space-y-5">
-        <h1 className="text-2xl font-bold text-slate-900">Settings</h1>
+        <h1 className="text-2xl font-bold text-slate-900">{t('title')}</h1>
         <div className="bg-white rounded-lg border border-slate-200 shadow-sm p-6 text-sm text-red-600">
-          Failed to load settings.
+          {tCommon('failedToLoad')}
         </div>
       </div>
     )
@@ -42,21 +45,21 @@ export default function SettingsPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Settings</h1>
-        <p className="text-sm text-slate-500 mt-0.5">Business configuration</p>
+        <h1 className="text-2xl font-bold text-slate-900">{t('title')}</h1>
+        <p className="text-sm text-slate-500 mt-0.5">{t('subtitle')}</p>
       </div>
 
       {/* Business info */}
       <section className="bg-white rounded-lg border border-slate-200 shadow-sm">
         <div className="px-6 py-4 border-b border-slate-200">
-          <h2 className="font-semibold text-slate-900">Business Information</h2>
+          <h2 className="font-semibold text-slate-900">{t('businessInfo')}</h2>
         </div>
         <div className="px-6 py-4 space-y-4">
-          <Row label="Business Name" value={tenant?.name} />
-          <Row label="URL Slug" value={tenant?.slug} mono />
-          <Row label="Plan" value={tenant?.plan?.toUpperCase()} />
+          <Row label={t('businessName')} value={tenant?.name} />
+          <Row label={t('urlSlug')} value={tenant?.slug} mono />
+          <Row label={t('plan')} value={tenant?.plan?.toUpperCase()} />
           <Row
-            label="Status"
+            label={t('status')}
             value={
               <span className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
                 tenant?.status === 'active'
@@ -75,20 +78,20 @@ export default function SettingsPage() {
       {/* Billing settings */}
       <section className="bg-white rounded-lg border border-slate-200 shadow-sm">
         <div className="px-6 py-4 border-b border-slate-200">
-          <h2 className="font-semibold text-slate-900">Billing &amp; Tax</h2>
+          <h2 className="font-semibold text-slate-900">{t('billingTax')}</h2>
         </div>
         <div className="px-6 py-4 space-y-4">
           <Row
-            label="VAT Registered"
-            value={tenant?.settings?.vatRegistered ? 'Yes' : 'No'}
+            label={t('vatRegistered')}
+            value={tenant?.settings?.vatRegistered ? t('yes') : t('no')}
           />
           <Row
-            label="PAN Number"
+            label={t('panNumber')}
             value={tenant?.settings?.panNumber ?? '—'}
             mono
           />
           <Row
-            label="Fiscal Year"
+            label={t('fiscalYear')}
             value={tenant?.settings?.fiscalYear ?? '—'}
           />
         </div>
@@ -97,20 +100,20 @@ export default function SettingsPage() {
       {/* Contact */}
       <section className="bg-white rounded-lg border border-slate-200 shadow-sm">
         <div className="px-6 py-4 border-b border-slate-200">
-          <h2 className="font-semibold text-slate-900">Contact</h2>
+          <h2 className="font-semibold text-slate-900">{t('contact')}</h2>
         </div>
         <div className="px-6 py-4 space-y-4">
-          <Row label="Phone" value={tenant?.settings?.phone ?? '—'} mono />
-          <Row label="Address" value={tenant?.settings?.address ?? '—'} />
+          <Row label={t('phone')} value={tenant?.settings?.phone ?? '—'} mono />
+          <Row label={t('address')} value={tenant?.settings?.address ?? '—'} />
           <Row
-            label="Default Language"
+            label={t('defaultLanguage')}
             value={tenant?.settings?.defaultLanguage === 'ne' ? 'नेपाली' : 'English'}
           />
         </div>
       </section>
 
       <p className="text-xs text-slate-400">
-        To update settings, use the API: <code className="font-mono bg-slate-100 px-1 rounded">PATCH /api/v1/tenant/settings</code>
+        {t('apiHint')} <code className="font-mono bg-slate-100 px-1 rounded">PATCH /api/v1/tenant/settings</code>
       </p>
     </div>
   )

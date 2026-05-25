@@ -2,18 +2,20 @@
 
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { useTranslations } from 'next-intl'
 import { api } from '@/lib/api'
 import { formatPaisa, ProductCategory } from '@panisewa/shared'
 import type { IProduct, PaginatedResponse } from '@/lib/api-types'
 
-const CATEGORY_LABELS: Record<ProductCategory, string> = {
-  JAR_20L: '20L Jar',
-  JAR_10L: '10L Jar',
-  JAR_5L: '5L Jar',
-  CUSTOM: 'Custom',
-}
-
 export default function ProductsPage() {
+  const t = useTranslations('products')
+  const tCommon = useTranslations('common')
+  const CATEGORY_LABELS: Record<ProductCategory, string> = {
+    JAR_20L: t('categories.JAR_20L'),
+    JAR_10L: t('categories.JAR_10L'),
+    JAR_5L: t('categories.JAR_5L'),
+    CUSTOM: t('categories.CUSTOM'),
+  }
   const [categoryFilter, setCategoryFilter] = useState<ProductCategory | ''>('')
   const [page, setPage] = useState(1)
 
@@ -33,8 +35,8 @@ export default function ProductsPage() {
   return (
     <div className="space-y-5">
       <div>
-        <h1 className="text-2xl font-bold text-slate-900">Products</h1>
-        <p className="text-sm text-slate-500 mt-0.5">{total} total products</p>
+        <h1 className="text-2xl font-bold text-slate-900">{t('title')}</h1>
+        <p className="text-sm text-slate-500 mt-0.5">{t('totalProducts', { count: total })}</p>
       </div>
 
       {/* Category filter */}
@@ -47,7 +49,7 @@ export default function ProductsPage() {
               : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
           }`}
         >
-          All
+          {tCommon('all')}
         </button>
         {Object.values(ProductCategory).map((cat) => (
           <button
@@ -72,21 +74,21 @@ export default function ProductsPage() {
             ))}
           </div>
         ) : isError ? (
-          <div className="p-6 text-sm text-red-600">Failed to load products.</div>
+          <div className="p-6 text-sm text-red-600">{t('failedToLoad')}</div>
         ) : products.length === 0 ? (
-          <div className="p-10 text-center text-sm text-slate-500">No products found.</div>
+          <div className="p-10 text-center text-sm text-slate-500">{t('noProducts')}</div>
         ) : (
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-200 bg-slate-50">
-                <th className="text-left px-4 py-3 font-medium text-slate-600">Name</th>
-                <th className="text-left px-4 py-3 font-medium text-slate-600">नाम</th>
-                <th className="text-left px-4 py-3 font-medium text-slate-600">Category</th>
-                <th className="text-left px-4 py-3 font-medium text-slate-600">SKU</th>
-                <th className="text-right px-4 py-3 font-medium text-slate-600">B2C Price</th>
-                <th className="text-right px-4 py-3 font-medium text-slate-600">B2B Price</th>
-                <th className="text-right px-4 py-3 font-medium text-slate-600">Deposit</th>
-                <th className="text-left px-4 py-3 font-medium text-slate-600">Status</th>
+                <th className="text-left px-4 py-3 font-medium text-slate-600">{t('name')}</th>
+                <th className="text-left px-4 py-3 font-medium text-slate-600">{t('nameNe')}</th>
+                <th className="text-left px-4 py-3 font-medium text-slate-600">{t('category')}</th>
+                <th className="text-left px-4 py-3 font-medium text-slate-600">{t('sku')}</th>
+                <th className="text-right px-4 py-3 font-medium text-slate-600">{t('priceB2c')}</th>
+                <th className="text-right px-4 py-3 font-medium text-slate-600">{t('priceB2b')}</th>
+                <th className="text-right px-4 py-3 font-medium text-slate-600">{t('deposit')}</th>
+                <th className="text-left px-4 py-3 font-medium text-slate-600">{t('status')}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -115,7 +117,7 @@ export default function ProductsPage() {
                         ? 'bg-green-50 text-green-700'
                         : 'bg-slate-100 text-slate-500'
                     }`}>
-                      {p.isActive ? 'Active' : 'Inactive'}
+                      {p.isActive ? tCommon('active') : tCommon('inactive')}
                     </span>
                   </td>
                 </tr>
@@ -127,21 +129,21 @@ export default function ProductsPage() {
 
       {total > 20 && (
         <div className="flex items-center justify-between text-sm text-slate-600">
-          <span>Page {page} of {Math.ceil(total / 20)}</span>
+          <span>{tCommon('pageOf', { page, total: Math.ceil(total / 20) })}</span>
           <div className="flex gap-2">
             <button
               disabled={page === 1}
               onClick={() => setPage((p) => p - 1)}
               className="px-3 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              Previous
+              {tCommon('previous')}
             </button>
             <button
               disabled={page >= Math.ceil(total / 20)}
               onClick={() => setPage((p) => p + 1)}
               className="px-3 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              Next
+              {tCommon('next')}
             </button>
           </div>
         </div>

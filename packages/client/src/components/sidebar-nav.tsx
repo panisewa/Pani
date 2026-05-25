@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { useLocale } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import {
   LayoutDashboard,
   ShoppingCart,
@@ -12,26 +12,31 @@ import {
   Truck,
   Settings,
   LogOut,
+  Globe,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/lib/auth-store'
 import axios from 'axios'
 
-const navItems = [
-  { href: '/dashboard', label: 'Dashboard',  icon: LayoutDashboard },
-  { href: '/orders',    label: 'Orders',     icon: ShoppingCart },
-  { href: '/customers', label: 'Customers',  icon: Users },
-  { href: '/products',  label: 'Products',   icon: Package },
-  { href: '/invoices',  label: 'Invoices',   icon: FileText },
-  { href: '/drivers',   label: 'Drivers',    icon: Truck },
-  { href: '/settings',  label: 'Settings',   icon: Settings },
-]
-
 export function SidebarNav() {
+  const t = useTranslations('nav')
   const locale = useLocale()
   const pathname = usePathname()
   const router = useRouter()
   const { user, clearAuth } = useAuthStore()
+
+  const navItems = [
+    { href: '/dashboard', label: t('dashboard'), icon: LayoutDashboard },
+    { href: '/orders',    label: t('orders'),    icon: ShoppingCart },
+    { href: '/customers', label: t('customers'), icon: Users },
+    { href: '/products',  label: t('products'),  icon: Package },
+    { href: '/invoices',  label: t('invoices'),  icon: FileText },
+    { href: '/drivers',   label: t('drivers'),   icon: Truck },
+    { href: '/settings',  label: t('settings'),  icon: Settings },
+  ]
+
+  const otherLocale = locale === 'en' ? 'ne' : 'en'
+  const switchPath = pathname.replace(`/${locale}/`, `/${otherLocale}/`)
 
   const handleLogout = async () => {
     await axios.post('/api/auth/logout').catch(() => null)
@@ -46,7 +51,9 @@ export function SidebarNav() {
         <svg className="w-7 h-7 text-primary" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
           <path d="M12 2C6.5 11 4 15 4 17.5a8 8 0 0 0 16 0C20 15 17.5 11 12 2z" />
         </svg>
-        <span className="font-bold text-slate-900">Panisewa</span>
+        <span className="font-bold text-slate-900">
+          {locale === 'ne' ? 'पानीसेवा' : 'Panisewa'}
+        </span>
       </div>
 
       {/* Nav */}
@@ -73,6 +80,17 @@ export function SidebarNav() {
         })}
       </nav>
 
+      {/* Language switcher */}
+      <div className="px-2 pb-2">
+        <Link
+          href={switchPath}
+          className="flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-slate-500 hover:bg-slate-50 hover:text-slate-700 transition-colors duration-150 w-full"
+        >
+          <Globe className="w-4 h-4 shrink-0" />
+          {t('switchLanguage')}
+        </Link>
+      </div>
+
       {/* User + logout */}
       <div className="border-t border-slate-200 p-3">
         {user && (
@@ -88,7 +106,7 @@ export function SidebarNav() {
           className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-50 hover:text-slate-900 transition-colors duration-150 cursor-pointer"
         >
           <LogOut className="w-4 h-4 shrink-0" aria-hidden="true" />
-          Sign out
+          {t('signOut')}
         </button>
       </div>
     </aside>

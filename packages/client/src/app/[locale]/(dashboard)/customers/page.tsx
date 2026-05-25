@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import { useTranslations } from 'next-intl'
 import { api } from '@/lib/api'
 import { formatPaisa } from '@panisewa/shared'
 import type { ICustomer, PaginatedResponse } from '@/lib/api-types'
@@ -9,6 +10,8 @@ import { CustomerFormModal } from '@/components/customers/customer-form-modal'
 import { Plus, Pencil } from 'lucide-react'
 
 export default function CustomersPage() {
+  const t = useTranslations('customers')
+  const tCommon = useTranslations('common')
   const [typeFilter, setTypeFilter] = useState<'B2C' | 'B2B' | ''>('')
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
@@ -33,15 +36,15 @@ export default function CustomersPage() {
     <div className="space-y-5">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-slate-900">Customers</h1>
-          <p className="text-sm text-slate-500 mt-0.5">{total} total customers</p>
+          <h1 className="text-2xl font-bold text-slate-900">{t('title')}</h1>
+          <p className="text-sm text-slate-500 mt-0.5">{t('totalCustomers', { count: total })}</p>
         </div>
         <button
           onClick={() => { setEditCustomer(undefined); setModalOpen(true) }}
           className="flex items-center gap-2 px-4 py-2 rounded-md bg-blue-700 text-white text-sm font-medium hover:bg-blue-800"
         >
           <Plus className="w-4 h-4" />
-          New Customer
+          {t('newCustomer')}
         </button>
       </div>
 
@@ -54,17 +57,17 @@ export default function CustomersPage() {
       <div className="flex gap-3 flex-wrap">
         {/* Type filter */}
         <div className="flex gap-1">
-          {(['', 'B2C', 'B2B'] as const).map((t) => (
+          {(['', 'B2C', 'B2B'] as const).map((typeVal) => (
             <button
-              key={t}
-              onClick={() => { setTypeFilter(t); setPage(1) }}
+              key={typeVal}
+              onClick={() => { setTypeFilter(typeVal); setPage(1) }}
               className={`px-3 py-1.5 rounded-md text-sm font-medium transition-colors ${
-                typeFilter === t
+                typeFilter === typeVal
                   ? 'bg-blue-700 text-white'
                   : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'
               }`}
             >
-              {t === '' ? 'All' : t}
+              {typeVal === '' ? tCommon('all') : typeVal}
             </button>
           ))}
         </div>
@@ -72,7 +75,7 @@ export default function CustomersPage() {
         {/* Search */}
         <input
           type="text"
-          placeholder="Search name, phone, email..."
+          placeholder={t('searchPlaceholder')}
           value={search}
           onChange={(e) => { setSearch(e.target.value); setPage(1) }}
           className="flex-1 min-w-48 px-3 py-1.5 rounded-md border border-slate-200 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-700 focus:border-transparent"
@@ -87,19 +90,19 @@ export default function CustomersPage() {
             ))}
           </div>
         ) : isError ? (
-          <div className="p-6 text-sm text-red-600">Failed to load customers.</div>
+          <div className="p-6 text-sm text-red-600">{t('failedToLoad')}</div>
         ) : customers.length === 0 ? (
-          <div className="p-10 text-center text-sm text-slate-500">No customers found.</div>
+          <div className="p-10 text-center text-sm text-slate-500">{t('noCustomers')}</div>
         ) : (
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-slate-200 bg-slate-50">
-                <th className="text-left px-4 py-3 font-medium text-slate-600">Name</th>
-                <th className="text-left px-4 py-3 font-medium text-slate-600">Type</th>
-                <th className="text-left px-4 py-3 font-medium text-slate-600">Phone</th>
-                <th className="text-left px-4 py-3 font-medium text-slate-600">Email</th>
-                <th className="text-right px-4 py-3 font-medium text-slate-600">Credit Limit</th>
-                <th className="text-left px-4 py-3 font-medium text-slate-600">Status</th>
+                <th className="text-left px-4 py-3 font-medium text-slate-600">{t('name')}</th>
+                <th className="text-left px-4 py-3 font-medium text-slate-600">{t('type')}</th>
+                <th className="text-left px-4 py-3 font-medium text-slate-600">{t('phone')}</th>
+                <th className="text-left px-4 py-3 font-medium text-slate-600">{t('email')}</th>
+                <th className="text-right px-4 py-3 font-medium text-slate-600">{t('creditLimit')}</th>
+                <th className="text-left px-4 py-3 font-medium text-slate-600">{t('status')}</th>
                 <th className="w-10" />
               </tr>
             </thead>
@@ -127,7 +130,7 @@ export default function CustomersPage() {
                         ? 'bg-green-50 text-green-700'
                         : 'bg-slate-100 text-slate-500'
                     }`}>
-                      {c.isActive ? 'Active' : 'Inactive'}
+                      {c.isActive ? tCommon('active') : tCommon('inactive')}
                     </span>
                   </td>
                   <td className="px-2 py-3">
@@ -147,21 +150,21 @@ export default function CustomersPage() {
 
       {total > 20 && (
         <div className="flex items-center justify-between text-sm text-slate-600">
-          <span>Page {page} of {Math.ceil(total / 20)}</span>
+          <span>{tCommon('pageOf', { page, total: Math.ceil(total / 20) })}</span>
           <div className="flex gap-2">
             <button
               disabled={page === 1}
               onClick={() => setPage((p) => p - 1)}
               className="px-3 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              Previous
+              {tCommon('previous')}
             </button>
             <button
               disabled={page >= Math.ceil(total / 20)}
               onClick={() => setPage((p) => p + 1)}
               className="px-3 py-1.5 rounded border border-slate-200 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed"
             >
-              Next
+              {tCommon('next')}
             </button>
           </div>
         </div>
