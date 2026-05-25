@@ -14,6 +14,8 @@ import {
   outForDeliveryHandler,
   confirmDeliveryHandler,
   cancelOrderHandler,
+  markFailedHandler,
+  listDriversHandler,
   driverTodayOrdersHandler,
 } from './order.controller.js'
 
@@ -28,6 +30,7 @@ orderRouter.get(
 )
 
 orderRouter.get('/', getOrdersHandler)
+orderRouter.get('/drivers', listDriversHandler)
 orderRouter.get('/:id', getOrderByIdHandler)
 
 orderRouter.post(
@@ -70,4 +73,10 @@ orderRouter.post(
   '/:id/cancel',
   requireRole(UserRole.TENANT_ADMIN, UserRole.MANAGER),
   cancelOrderHandler
+)
+
+orderRouter.post(
+  '/:id/fail',
+  requireRole(UserRole.TENANT_ADMIN, UserRole.MANAGER),
+  markFailedHandler
 )

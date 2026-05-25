@@ -148,6 +148,9 @@
     "editSaved": "Changes saved",
     "failedToUpdate": "Update failed. Try again.",
     "failedToLoadDetail": "Failed to load order details.",
+    "assignDriver": "Assign Driver",
+    "selectDriver": "Select driver...",
+    "emptiesCollected": "Empty jars collected",
     "actions": {
       "confirm": "Confirm Order",
       "assign": "Mark Assigned",

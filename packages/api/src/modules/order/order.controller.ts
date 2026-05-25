@@ -117,6 +117,27 @@ export const cancelOrderHandler: RequestHandler = async (req, res, next) => {
   }
 }
 
+export const markFailedHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const authReq = req as AuthRequest
+    const { id } = req.params as { id: string }
+    const order = await orderService.markFailed(authReq.tenant!.id, id)
+    res.json({ success: true, data: order })
+  } catch (err) {
+    next(err)
+  }
+}
+
+export const listDriversHandler: RequestHandler = async (req, res, next) => {
+  try {
+    const authReq = req as AuthRequest
+    const drivers = await orderService.listDrivers(authReq.tenant!.id)
+    res.json({ success: true, data: drivers })
+  } catch (err) {
+    next(err)
+  }
+}
+
 export const driverTodayOrdersHandler: RequestHandler = async (req, res, next) => {
   try {
     const authReq = req as AuthRequest

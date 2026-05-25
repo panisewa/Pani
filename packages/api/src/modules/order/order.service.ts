@@ -356,6 +356,23 @@ export async function markFailed(tenantId: string, orderId: string): Promise<IOr
   return transitionStatus(tenantId, orderId, OrderStatus.FAILED)
 }
 
+export async function listDrivers(tenantId: string): Promise<{ id: string; firstName: string; lastName: string }[]> {
+  const { data, error } = await supabaseAdmin
+    .from('users')
+    .select('id, first_name, last_name')
+    .eq('tenant_id', tenantId)
+    .eq('role', 'DRIVER')
+    .eq('is_active', true)
+    .order('first_name', { ascending: true })
+
+  if (error) throw new AppError('DRIVERS_FETCH_FAILED', 500)
+  return (data ?? []).map((d) => ({
+    id: d.id as string,
+    firstName: (d.first_name as string | null) ?? '',
+    lastName: (d.last_name as string | null) ?? '',
+  }))
+}
+
 export async function getDriverTodayOrders(driverId: string, tenantId: string): Promise<IOrder[]> {
   const today = new Date().toISOString().slice(0, 10)
 

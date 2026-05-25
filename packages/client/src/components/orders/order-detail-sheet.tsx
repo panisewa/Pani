@@ -11,6 +11,12 @@ import { ArrowRight, AlertCircle, XCircle } from 'lucide-react'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import type { IOrder, SingleResponse } from '@/lib/api-types'
 
+interface Driver {
+  id: string
+  firstName: string
+  lastName: string
+}
+
 interface Props {
   orderId: string | null
   onOpenChange: (open: boolean) => void
@@ -27,13 +33,6 @@ const PIPELINE: OrderStatus[] = [
 const TERMINAL = new Set<OrderStatus>([OrderStatus.DELIVERED, OrderStatus.FAILED, OrderStatus.CANCELLED])
 const EDITABLE = new Set<OrderStatus>([OrderStatus.DRAFT, OrderStatus.CONFIRMED])
 const CANCELLABLE = new Set<OrderStatus>([OrderStatus.DRAFT, OrderStatus.CONFIRMED, OrderStatus.ASSIGNED])
-
-const STATUS_ADVANCE: Partial<Record<OrderStatus, { next: OrderStatus; key: string }>> = {
-  [OrderStatus.DRAFT]:            { next: OrderStatus.CONFIRMED,        key: 'actions.confirm' },
-  [OrderStatus.CONFIRMED]:        { next: OrderStatus.ASSIGNED,         key: 'actions.assign' },
-  [OrderStatus.ASSIGNED]:         { next: OrderStatus.OUT_FOR_DELIVERY, key: 'actions.startDelivery' },
-  [OrderStatus.OUT_FOR_DELIVERY]: { next: OrderStatus.DELIVERED,        key: 'actions.markDelivered' },
-}
 
 function parseAmendments(notes: string | null): { date: string; text: string }[] {
   if (!notes) return []
@@ -66,6 +65,8 @@ export function OrderDetailSheet({ orderId, onOpenChange }: Props) {
   const [scheduledDate, setScheduledDate] = useState('')
   const [paymentMethod, setPaymentMethod] = useState('')
   const [amendmentNote, setAmendmentNote] = useState('')
+  const [selectedDriverId, setSelectedDriverId] = useState('')
+  const [emptiesCollected, setEmptiesCollected] = useState(0)
   const [isSaving, setIsSaving] = useState(false)
 
   const open = orderId !== null
@@ -81,6 +82,17 @@ export function OrderDetailSheet({ orderId, onOpenChange }: Props) {
 
   const order = data?.data
 
+  const { data: driversData } = useQuery<{ success: boolean; data: Driver[] }>({
+    queryKey: ['drivers-list'],
+    queryFn: async () => {
+      const res = await api.get<{ success: boolean; data: Driver[] }>('/orders/drivers')
+      return res.data
+    },
+    enabled: open && order?.status === OrderStatus.CONFIRMED,
+    staleTime: 60_000,
+  })
+  const drivers = driversData?.data ?? []
+
   const invalidate = async () => {
     await Promise.all([
       qc.invalidateQueries({ queryKey: ['orders'] }),
@@ -90,21 +102,36 @@ export function OrderDetailSheet({ orderId, onOpenChange }: Props) {
     ])
   }
 
-  const patch = async (payload: Record<string, unknown>) => {
-    await api.patch(`/orders/${orderId}`, payload)
-    await invalidate()
-  }
-
   const handleAdvanceStatus = async () => {
     if (!order) return
-    const action = STATUS_ADVANCE[order.status]
-    if (!action) return
     setIsSaving(true)
     try {
-      await patch({ status: action.next })
+      switch (order.status) {
+        case OrderStatus.DRAFT:
+          await api.post(`/orders/${orderId}/confirm`, {})
+          break
+        case OrderStatus.CONFIRMED:
+          if (!selectedDriverId) { toast.error('Select a driver first'); setIsSaving(false); return }
+          await api.post(`/orders/${orderId}/assign-driver`, { driver_id: selectedDriverId })
+          setSelectedDriverId('')
+          break
+        case OrderStatus.ASSIGNED:
+          await api.post(`/orders/${orderId}/out-for-delivery`, {})
+          break
+        case OrderStatus.OUT_FOR_DELIVERY:
+          await api.post(`/orders/${orderId}/deliver`, { empties_collected: emptiesCollected })
+          setEmptiesCollected(0)
+          break
+        default:
+          setIsSaving(false)
+          return
+      }
+      await invalidate()
       toast.success(t('statusAdvanced'))
-    } catch {
-      toast.error(t('failedToUpdate'))
+    } catch (err: unknown) {
+      const msg = (err as { response?: { data?: { error?: { message?: string } } } })
+        ?.response?.data?.error?.message
+      toast.error(msg ?? t('failedToUpdate'))
     } finally {
       setIsSaving(false)
     }
@@ -113,7 +140,8 @@ export function OrderDetailSheet({ orderId, onOpenChange }: Props) {
   const handleMarkFailed = async () => {
     setIsSaving(true)
     try {
-      await patch({ status: OrderStatus.FAILED })
+      await api.post(`/orders/${orderId}/fail`, {})
+      await invalidate()
       toast.success(t('statusAdvanced'))
     } catch {
       toast.error(t('failedToUpdate'))
@@ -125,7 +153,8 @@ export function OrderDetailSheet({ orderId, onOpenChange }: Props) {
   const handleCancel = async () => {
     setIsSaving(true)
     try {
-      await patch({ status: OrderStatus.CANCELLED })
+      await api.post(`/orders/${orderId}/cancel`, {})
+      await invalidate()
       toast.success(t('statusAdvanced'))
       setCancelConfirm(false)
     } catch {
@@ -143,7 +172,8 @@ export function OrderDetailSheet({ orderId, onOpenChange }: Props) {
       if (scheduledDate !== (order.scheduledDate ?? '')) payload.scheduled_date = scheduledDate || null
       if (paymentMethod !== (order.paymentMethod ?? '')) payload.payment_method = paymentMethod || null
       if (Object.keys(payload).length === 0) { setEditMode(false); setIsSaving(false); return }
-      await patch(payload)
+      await api.patch(`/orders/${orderId}`, payload)
+      await invalidate()
       toast.success(t('editSaved'))
       setEditMode(false)
     } catch {
@@ -161,7 +191,8 @@ export function OrderDetailSheet({ orderId, onOpenChange }: Props) {
       const newLine = `[${today}] ${amendmentNote.trim()}`
       const existing = order.notes ?? ''
       const updated = existing ? `${newLine}\n${existing}` : newLine
-      await patch({ notes: updated })
+      await api.patch(`/orders/${orderId}`, { notes: updated })
+      await invalidate()
       toast.success(t('amendmentSaved'))
       setAmendmentNote('')
     } catch {
@@ -176,6 +207,8 @@ export function OrderDetailSheet({ orderId, onOpenChange }: Props) {
     setCancelConfirm(false)
     setEditMode(false)
     setAmendmentNote('')
+    setSelectedDriverId('')
+    setEmptiesCollected(0)
   }
 
   const inputCls =
@@ -313,17 +346,55 @@ export function OrderDetailSheet({ orderId, onOpenChange }: Props) {
               {/* Actions */}
               {!TERMINAL.has(order.status) && (
                 <div className="px-6 py-4 space-y-2">
-                  {STATUS_ADVANCE[order.status] && (
+                  {/* Driver selector for CONFIRMED → ASSIGNED */}
+                  {order.status === OrderStatus.CONFIRMED && (
+                    <div className="mb-1">
+                      <label className={labelCls}>{t('assignDriver')}</label>
+                      <select
+                        className={inputCls}
+                        value={selectedDriverId}
+                        onChange={(e) => setSelectedDriverId(e.target.value)}
+                      >
+                        <option value="">{t('selectDriver')}</option>
+                        {drivers.map((d) => (
+                          <option key={d.id} value={d.id}>
+                            {d.firstName} {d.lastName}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+
+                  {/* Empties collected for OUT_FOR_DELIVERY → DELIVERED */}
+                  {order.status === OrderStatus.OUT_FOR_DELIVERY && (
+                    <div className="mb-1">
+                      <label className={labelCls}>{t('emptiesCollected')}</label>
+                      <input
+                        type="number"
+                        min="0"
+                        className={inputCls}
+                        value={emptiesCollected}
+                        onChange={(e) => setEmptiesCollected(parseInt(e.target.value) || 0)}
+                      />
+                    </div>
+                  )}
+
+                  {/* Primary advance button */}
+                  {order.status !== OrderStatus.DELIVERED && (
                     <button
-                      disabled={isSaving}
+                      disabled={isSaving || (order.status === OrderStatus.CONFIRMED && !selectedDriverId)}
                       onClick={handleAdvanceStatus}
-                      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-primary text-sm font-semibold text-white hover:bg-blue-800 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                      className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-md bg-primary text-sm font-semibold text-white hover:bg-blue-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <ArrowRight className="w-4 h-4" aria-hidden="true" />
-                      {t(STATUS_ADVANCE[order.status]!.key as Parameters<typeof t>[0])}
+                      {order.status === OrderStatus.DRAFT && t('actions.confirm')}
+                      {order.status === OrderStatus.CONFIRMED && t('actions.assign')}
+                      {order.status === OrderStatus.ASSIGNED && t('actions.startDelivery')}
+                      {order.status === OrderStatus.OUT_FOR_DELIVERY && t('actions.markDelivered')}
                     </button>
                   )}
 
+                  {/* Mark Failed (OUT_FOR_DELIVERY only) */}
                   {order.status === OrderStatus.OUT_FOR_DELIVERY && (
                     <button
                       disabled={isSaving}
@@ -334,6 +405,7 @@ export function OrderDetailSheet({ orderId, onOpenChange }: Props) {
                     </button>
                   )}
 
+                  {/* Cancel */}
                   {CANCELLABLE.has(order.status) && (
                     cancelConfirm ? (
                       <div className="rounded-md bg-red-50 border border-red-200 p-3 space-y-2">
@@ -485,7 +557,7 @@ export function OrderDetailSheet({ orderId, onOpenChange }: Props) {
                 </div>
               )}
 
-              {/* Amendment history + add note */}
+              {/* Amendments */}
               <div className="px-6 py-4 space-y-3">
                 <p className={labelCls}>{t('amendments')}</p>
 
@@ -511,9 +583,7 @@ export function OrderDetailSheet({ orderId, onOpenChange }: Props) {
                 {(() => {
                   const amendments = parseAmendments(order.notes)
                   if (amendments.length === 0) {
-                    return (
-                      <p className="text-xs text-slate-400 italic">{t('noAmendments')}</p>
-                    )
+                    return <p className="text-xs text-slate-400 italic">{t('noAmendments')}</p>
                   }
                   return (
                     <div className="space-y-2.5">
