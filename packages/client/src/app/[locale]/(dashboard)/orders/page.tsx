@@ -6,6 +6,8 @@ import { api } from '@/lib/api'
 import { formatPaisa } from '@panisewa/shared'
 import { OrderStatus } from '@panisewa/shared'
 import type { IOrder, PaginatedResponse } from '@/lib/api-types'
+import { OrderFormModal } from '@/components/orders/order-form-modal'
+import { Plus } from 'lucide-react'
 
 const STATUS_STYLES: Record<OrderStatus, string> = {
   DRAFT: 'bg-slate-100 text-slate-500',
@@ -30,6 +32,7 @@ const STATUS_LABELS: Record<OrderStatus, string> = {
 export default function OrdersPage() {
   const [statusFilter, setStatusFilter] = useState<OrderStatus | ''>('')
   const [page, setPage] = useState(1)
+  const [modalOpen, setModalOpen] = useState(false)
 
   const { data, isLoading, isError } = useQuery<PaginatedResponse<IOrder>>({
     queryKey: ['orders', statusFilter, page],
@@ -46,10 +49,21 @@ export default function OrdersPage() {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">Orders</h1>
-        <p className="text-sm text-slate-500 mt-0.5">{total} total orders</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Orders</h1>
+          <p className="text-sm text-slate-500 mt-0.5">{total} total orders</p>
+        </div>
+        <button
+          onClick={() => setModalOpen(true)}
+          className="flex items-center gap-2 px-4 py-2 rounded-md bg-blue-700 text-white text-sm font-medium hover:bg-blue-800"
+        >
+          <Plus className="w-4 h-4" />
+          New Order
+        </button>
       </div>
+
+      <OrderFormModal open={modalOpen} onClose={() => setModalOpen(false)} />
 
       {/* Status filter tabs */}
       <div className="flex gap-1 flex-wrap">

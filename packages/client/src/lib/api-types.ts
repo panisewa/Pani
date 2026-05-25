@@ -32,8 +32,10 @@ export interface ICustomer {
   name: string
   phone: string | null
   email: string | null
+  address: Record<string, string> | null
   creditLimit: number
   creditTerms: 'net30' | 'net60' | 'net90' | null
+  notes: string | null
   isActive: boolean
   createdAt: string
 }

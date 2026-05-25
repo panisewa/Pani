@@ -5,11 +5,15 @@ import { useQuery } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import { formatPaisa } from '@panisewa/shared'
 import type { ICustomer, PaginatedResponse } from '@/lib/api-types'
+import { CustomerFormModal } from '@/components/customers/customer-form-modal'
+import { Plus, Pencil } from 'lucide-react'
 
 export default function CustomersPage() {
   const [typeFilter, setTypeFilter] = useState<'B2C' | 'B2B' | ''>('')
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
+  const [modalOpen, setModalOpen] = useState(false)
+  const [editCustomer, setEditCustomer] = useState<ICustomer | undefined>()
 
   const { data, isLoading, isError } = useQuery<PaginatedResponse<ICustomer>>({
     queryKey: ['customers', typeFilter, search, page],
@@ -27,10 +31,25 @@ export default function CustomersPage() {
 
   return (
     <div className="space-y-5">
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900">Customers</h1>
-        <p className="text-sm text-slate-500 mt-0.5">{total} total customers</p>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-bold text-slate-900">Customers</h1>
+          <p className="text-sm text-slate-500 mt-0.5">{total} total customers</p>
+        </div>
+        <button
+          onClick={() => { setEditCustomer(undefined); setModalOpen(true) }}
+          className="flex items-center gap-2 px-4 py-2 rounded-md bg-blue-700 text-white text-sm font-medium hover:bg-blue-800"
+        >
+          <Plus className="w-4 h-4" />
+          New Customer
+        </button>
       </div>
+
+      <CustomerFormModal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        customer={editCustomer}
+      />
 
       <div className="flex gap-3 flex-wrap">
         {/* Type filter */}
@@ -81,6 +100,7 @@ export default function CustomersPage() {
                 <th className="text-left px-4 py-3 font-medium text-slate-600">Email</th>
                 <th className="text-right px-4 py-3 font-medium text-slate-600">Credit Limit</th>
                 <th className="text-left px-4 py-3 font-medium text-slate-600">Status</th>
+                <th className="w-10" />
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100">
@@ -109,6 +129,14 @@ export default function CustomersPage() {
                     }`}>
                       {c.isActive ? 'Active' : 'Inactive'}
                     </span>
+                  </td>
+                  <td className="px-2 py-3">
+                    <button
+                      onClick={() => { setEditCustomer(c); setModalOpen(true) }}
+                      className="p-1.5 text-slate-400 hover:text-blue-700 rounded"
+                    >
+                      <Pencil className="w-3.5 h-3.5" />
+                    </button>
                   </td>
                 </tr>
               ))}
