@@ -1,0 +1,60 @@
+{
+  "auth": {
+    "login": {
+      "title": "Sign in to Panisewa",
+      "subtitle": "Water delivery management platform",
+      "email": "Email address",
+      "emailPlaceholder": "admin@company.com",
+      "password": "Password",
+      "passwordPlaceholder": "Enter your password",
+      "submit": "Sign in",
+      "submitting": "Signing in...",
+      "noAccount": "New business?",
+      "registerLink": "Create account",
+      "forgotPassword": "Forgot password?"
+    },
+    "register": {
+      "title": "Create your business account",
+      "subtitle": "Start managing your water delivery business",
+      "tenantName": "Business name",
+      "tenantNamePlaceholder": "Himalayan Water Co.",
+      "tenantSlug": "Business URL slug",
+      "tenantSlugPlaceholder": "himalayan-water",
+      "tenantSlugHint": "Lowercase letters, numbers, hyphens only",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "email": "Email address",
+      "password": "Password",
+      "passwordHint": "Minimum 8 characters",
+      "phone": "Phone number (optional)",
+      "phonePlaceholder": "98XXXXXXXX",
+      "phoneHint": "Nepal mobile number",
+      "submit": "Create account",
+      "submitting": "Creating account...",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Sign in"
+    },
+    "errors": {
+      "invalidCredentials": "Invalid email or password",
+      "accountInactive": "Your account has been deactivated. Contact support.",
+      "networkError": "Unable to connect. Check your internet connection.",
+      "unknown": "Something went wrong. Please try again."
+    }
+  },
+  "common": {
+    "appName": "Panisewa",
+    "language": "Language",
+    "english": "English",
+    "nepali": "नेपाली",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "required": "Required"
+  }
+}

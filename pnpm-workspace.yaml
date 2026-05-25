@@ -1,0 +1,13 @@
+packages:
+  - 'packages/*'
+  - 'apps/*'
+
+allowBuilds:
+  esbuild: true
+  msgpackr-extract: true
+  puppeteer: true
+
+onlyBuiltDependencies:
+  - esbuild
+  - msgpackr-extract
+  - puppeteer

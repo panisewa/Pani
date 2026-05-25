@@ -1,0 +1,60 @@
+{
+  "auth": {
+    "login": {
+      "title": "पानीसेवामा लगइन गर्नुहोस्",
+      "subtitle": "पानी डेलिभरी व्यवस्थापन प्लेटफर्म",
+      "email": "इमेल ठेगाना",
+      "emailPlaceholder": "admin@company.com",
+      "password": "पासवर्ड",
+      "passwordPlaceholder": "पासवर्ड हाल्नुहोस्",
+      "submit": "लगइन गर्नुहोस्",
+      "submitting": "लगइन हुँदैछ...",
+      "noAccount": "नयाँ व्यापार?",
+      "registerLink": "खाता बनाउनुहोस्",
+      "forgotPassword": "पासवर्ड बिर्सनुभयो?"
+    },
+    "register": {
+      "title": "व्यापार खाता बनाउनुहोस्",
+      "subtitle": "पानी डेलिभरी व्यापार व्यवस्थापन सुरु गर्नुहोस्",
+      "tenantName": "व्यापार नाम",
+      "tenantNamePlaceholder": "हिमालयन वाटर कम्पनी",
+      "tenantSlug": "व्यापार URL स्लग",
+      "tenantSlugPlaceholder": "himalayan-water",
+      "tenantSlugHint": "सानो अक्षर, संख्या, हाइफन मात्र",
+      "firstName": "पहिलो नाम",
+      "lastName": "थर",
+      "email": "इमेल ठेगाना",
+      "password": "पासवर्ड",
+      "passwordHint": "कम्तिमा ८ अक्षर",
+      "phone": "फोन नम्बर (वैकल्पिक)",
+      "phonePlaceholder": "98XXXXXXXX",
+      "phoneHint": "नेपाल मोबाइल नम्बर",
+      "submit": "खाता बनाउनुहोस्",
+      "submitting": "खाता बनाउँदैछ...",
+      "hasAccount": "पहिले नै खाता छ?",
+      "loginLink": "लगइन गर्नुहोस्"
+    },
+    "errors": {
+      "invalidCredentials": "इमेल वा पासवर्ड गलत छ",
+      "accountInactive": "तपाईंको खाता निष्क्रिय छ। सहायता टोलीलाई सम्पर्क गर्नुहोस्।",
+      "networkError": "जडान हुन सकेन। इन्टरनेट जाँच गर्नुहोस्।",
+      "unknown": "केही गलत भयो। पुनः प्रयास गर्नुहोस्।"
+    }
+  },
+  "common": {
+    "appName": "पानीसेवा",
+    "language": "भाषा",
+    "english": "English",
+    "nepali": "नेपाली",
+    "loading": "लोड हुँदैछ...",
+    "error": "त्रुटि",
+    "success": "सफल",
+    "cancel": "रद्द गर्नुहोस्",
+    "save": "सुरक्षित गर्नुहोस्",
+    "delete": "हटाउनुहोस्",
+    "edit": "सम्पादन गर्नुहोस्",
+    "back": "पछाडि",
+    "next": "अगाडि",
+    "required": "आवश्यक"
+  }
+}
