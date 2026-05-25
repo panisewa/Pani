@@ -1,0 +1,147 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-25T00:00:00Z",
+  "title": "Design System: Panisewa",
+  "extensions": {
+    "colorMeta": {
+      "dispatch-blue":    { "role": "primary",   "displayName": "Dispatch Blue",    "canonical": "oklch(43% 0.22 264)", "tonalRamp": ["#1e2a6e","#1a3bbd","#1D4ED8","#2563EB","#3B82F6","#60A5FA","#93C5FD","#DBEAFE"] },
+      "signal-blue":      { "role": "primary",   "displayName": "Signal Blue",      "canonical": "oklch(59% 0.20 264)", "tonalRamp": ["#1e3a8a","#1d4ed8","#2563EB","#3B82F6","#60A5FA","#93C5FD","#BFDBFE","#EFF6FF"] },
+      "action-orange":    { "role": "secondary", "displayName": "Action Orange",    "canonical": "oklch(60% 0.22 42)",  "tonalRamp": ["#7c2d12","#9a3412","#C2410C","#EA580C","#F97316","#FB923C","#FDBA74","#FFEDD5"] },
+      "delivered-green":  { "role": "tertiary",  "displayName": "Delivered Green",  "canonical": "oklch(47% 0.17 152)", "tonalRamp": ["#14532d","#166534","#15803d","#16A34A","#22C55E","#4ADE80","#86EFAC","#DCFCE7"] },
+      "transit-amber":    { "role": "tertiary",  "displayName": "Transit Amber",    "canonical": "oklch(62% 0.15 72)",  "tonalRamp": ["#78350f","#92400e","#B45309","#D97706","#F59E0B","#FCD34D","#FDE68A","#FEF3C7"] },
+      "alert-red":        { "role": "tertiary",  "displayName": "Alert Red",        "canonical": "oklch(51% 0.22 29)",  "tonalRamp": ["#7f1d1d","#991b1b","#b91c1c","#DC2626","#EF4444","#F87171","#FCA5A5","#FEE2E2"] },
+      "slate-canvas":     { "role": "neutral",   "displayName": "Slate Canvas",     "canonical": "oklch(96% 0.005 247)","tonalRamp": ["#0f172a","#1e293b","#334155","#475569","#94a3b8","#cbd5e1","#e2e8f0","#F1F5F9"] },
+      "white-surface":    { "role": "neutral",   "displayName": "White Surface",    "canonical": "oklch(100% 0 0)",     "tonalRamp": ["#e2e8f0","#f1f5f9","#f8fafc","#FFFFFF","#FFFFFF","#FFFFFF","#FFFFFF","#FFFFFF"] },
+      "mist-border":      { "role": "neutral",   "displayName": "Mist Border",      "canonical": "oklch(92% 0.006 247)","tonalRamp": ["#94a3b8","#cbd5e1","#E2E8F0","#f1f5f9","#f8fafc","#FFFFFF","#FFFFFF","#FFFFFF"] },
+      "ink-text":         { "role": "neutral",   "displayName": "Ink Text",         "canonical": "oklch(16% 0.02 264)", "tonalRamp": ["#0F172A","#1e293b","#334155","#475569","#64748b","#94a3b8","#cbd5e1","#e2e8f0"] },
+      "slate-muted":      { "role": "neutral",   "displayName": "Slate Muted",      "canonical": "oklch(43% 0.01 247)", "tonalRamp": ["#1e293b","#334155","#475569","#64748b","#94a3b8","#cbd5e1","#e2e8f0","#f1f5f9"] },
+      "ghost-disabled":   { "role": "neutral",   "displayName": "Ghost Disabled",   "canonical": "oklch(67% 0.008 247)","tonalRamp": ["#475569","#64748b","#94A3B8","#cbd5e1","#e2e8f0","#f1f5f9","#f8fafc","#FFFFFF"] }
+    },
+    "typographyMeta": {
+      "display":  { "displayName": "Display",  "purpose": "Page-level route titles. Used once per route." },
+      "headline": { "displayName": "Headline", "purpose": "Card and modal headings. One per major section." },
+      "title":    { "displayName": "Title",    "purpose": "Table column headers and form section labels." },
+      "body":     { "displayName": "Body",     "purpose": "Table rows, form input text, descriptive copy. Max 70ch." },
+      "label":    { "displayName": "Label",    "purpose": "Badge text, chip labels, help text, timestamps." },
+      "mono":     { "displayName": "Mono",     "purpose": "All currency amounts, order numbers, IDs. Non-negotiable." }
+    },
+    "shadows": [
+      { "name": "hairline", "value": "0 1px 2px rgba(0,0,0,0.04)", "purpose": "Table row hover, subtle input lift." },
+      { "name": "ambient",  "value": "0 1px 3px rgba(0,0,0,0.08)", "purpose": "Card resting state. Default for all surface containers." },
+      { "name": "raised",   "value": "0 4px 6px rgba(0,0,0,0.07)", "purpose": "Dropdown menus, active popovers, floating labels." },
+      { "name": "floating", "value": "0 10px 15px rgba(0,0,0,0.08)", "purpose": "Modals, sheets, drawers." }
+    ],
+    "motion": [
+      { "name": "ease-standard", "value": "cubic-bezier(0.4, 0, 0.2, 1)",  "purpose": "Default: state transitions, color changes." },
+      { "name": "ease-out-fast", "value": "cubic-bezier(0, 0, 0.2, 1)",    "purpose": "Enter animations: menus, sheets sliding in." },
+      { "name": "duration-fast", "value": "150ms", "purpose": "Color/opacity transitions." },
+      { "name": "duration-base", "value": "200ms", "purpose": "Position/size transitions." },
+      { "name": "duration-slow", "value": "300ms", "purpose": "Sheet/modal enter/exit." }
+    ],
+    "breakpoints": [
+      { "name": "md", "value": "768px",  "purpose": "Sidebar visible; layout switches to flex-row." },
+      { "name": "lg", "value": "1024px", "purpose": "KPI grid expands to 3 columns." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Single primary action per view. Action Orange. Never repeat within one viewport.",
+      "html": "<button class=\"ds-btn-primary\">New Order</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background-color: #EA580C; color: #FFFFFF; font-family: Inter, system-ui, sans-serif; font-size: 14px; font-weight: 600; line-height: 1.4; padding: 10px 16px; border: none; border-radius: 6px; cursor: pointer; transition: background-color 150ms cubic-bezier(0.4,0,0.2,1); } .ds-btn-primary:hover { background-color: #C2410C; } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #EA580C; } .ds-btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary actions, pagination, cancel. White with Mist Border.",
+      "html": "<button class=\"ds-btn-ghost\">Cancel</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background-color: #FFFFFF; color: #475569; font-family: Inter, system-ui, sans-serif; font-size: 14px; font-weight: 500; line-height: 1.4; padding: 6px 12px; border: 1px solid #E2E8F0; border-radius: 6px; cursor: pointer; transition: background-color 150ms cubic-bezier(0.4,0,0.2,1), color 150ms; } .ds-btn-ghost:hover { background-color: #F1F5F9; color: #0F172A; } .ds-btn-ghost:focus-visible { outline: none; box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #1D4ED8; } .ds-btn-ghost:disabled { opacity: 0.4; cursor: not-allowed; }"
+    },
+    {
+      "name": "Filter Chip",
+      "kind": "chip",
+      "refersTo": "chip-active",
+      "description": "Status/category filter tabs above data tables. One always active.",
+      "html": "<div class=\"ds-chip-group\"><button class=\"ds-chip ds-chip--active\">All</button><button class=\"ds-chip\">CONFIRMED</button><button class=\"ds-chip\">DELIVERED</button></div>",
+      "css": ".ds-chip-group { display: flex; gap: 4px; flex-wrap: wrap; } .ds-chip { display: inline-flex; align-items: center; padding: 6px 12px; font-family: Inter, system-ui, sans-serif; font-size: 14px; font-weight: 500; border-radius: 6px; cursor: pointer; border: 1px solid #E2E8F0; background-color: #FFFFFF; color: #475569; transition: background-color 150ms, color 150ms; } .ds-chip:hover { background-color: #F1F5F9; } .ds-chip--active { background-color: #1D4ED8; color: #FFFFFF; border-color: #1D4ED8; } .ds-chip--active:hover { background-color: #1e40af; }"
+    },
+    {
+      "name": "Text Input",
+      "kind": "input",
+      "refersTo": "input-default",
+      "description": "Form fields. Focus ring in Dispatch Blue. Error state in Alert Red.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-label\" for=\"ds-email\">Email address</label><input class=\"ds-input\" id=\"ds-email\" type=\"email\" placeholder=\"admin@company.com\"></div>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 6px; } .ds-label { font-family: Inter, system-ui, sans-serif; font-size: 14px; font-weight: 500; color: #334155; } .ds-input { width: 100%; background-color: #FFFFFF; color: #0F172A; font-family: Inter, system-ui, sans-serif; font-size: 14px; font-weight: 400; line-height: 1.5; padding: 8px 12px; border: 1px solid #E2E8F0; border-radius: 6px; outline: none; transition: border-color 150ms, box-shadow 150ms; box-sizing: border-box; } .ds-input::placeholder { color: #94A3B8; } .ds-input:focus { border-color: #1D4ED8; box-shadow: 0 0 0 3px rgba(29,78,216,0.15); } .ds-input.ds-input--error { border-color: #DC2626; } .ds-input.ds-input--error:focus { box-shadow: 0 0 0 3px rgba(220,38,38,0.15); }"
+    },
+    {
+      "name": "Data Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Primary surface for all data tables, form sections, and KPI panels.",
+      "html": "<div class=\"ds-card\"><div class=\"ds-card__header\"><h2 class=\"ds-card__title\">Orders</h2></div><div class=\"ds-card__body\"><p class=\"ds-card__meta\">48 orders today</p></div></div>",
+      "css": ".ds-card { background-color: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); overflow: hidden; } .ds-card__header { padding: 16px 24px; border-bottom: 1px solid #E2E8F0; } .ds-card__title { font-family: Inter, system-ui, sans-serif; font-size: 14px; font-weight: 600; color: #0F172A; margin: 0; } .ds-card__body { padding: 24px; } .ds-card__meta { font-family: Inter, system-ui, sans-serif; font-size: 14px; color: #475569; margin: 0; }"
+    },
+    {
+      "name": "Status Badge",
+      "kind": "chip",
+      "description": "Order, invoice, and customer status. Semantic colors only. Text always uppercase.",
+      "html": "<div style=\"display:flex;gap:8px;align-items:center\"><span class=\"ds-badge ds-badge--delivered\">DELIVERED</span><span class=\"ds-badge ds-badge--pending\">DRAFT</span><span class=\"ds-badge ds-badge--transit\">OUT FOR DELIVERY</span><span class=\"ds-badge ds-badge--alert\">OVERDUE</span><span class=\"ds-badge ds-badge--confirmed\">CONFIRMED</span></div>",
+      "css": ".ds-badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 4px; font-family: Inter, system-ui, sans-serif; font-size: 12px; font-weight: 500; line-height: 1.4; text-transform: uppercase; white-space: nowrap; } .ds-badge--delivered { background-color: #f0fdf4; color: #15803d; } .ds-badge--pending { background-color: #F1F5F9; color: #64748b; } .ds-badge--transit { background-color: #fffbeb; color: #B45309; } .ds-badge--alert { background-color: #fef2f2; color: #b91c1c; } .ds-badge--confirmed { background-color: #eff6ff; color: #1D4ED8; } .ds-badge--assigned { background-color: #eef2ff; color: #4338ca; }"
+    },
+    {
+      "name": "Sidebar Nav",
+      "kind": "nav",
+      "description": "240px desktop sidebar. White surface, Mist Border right edge. Active items in Dispatch Blue.",
+      "html": "<nav class=\"ds-sidebar\"><a class=\"ds-nav-item ds-nav-item--active\" href=\"#\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><rect x=\"3\" y=\"3\" width=\"7\" height=\"7\"/><rect x=\"14\" y=\"3\" width=\"7\" height=\"7\"/><rect x=\"3\" y=\"14\" width=\"7\" height=\"7\"/><rect x=\"14\" y=\"14\" width=\"7\" height=\"7\"/></svg>Dashboard</a><a class=\"ds-nav-item\" href=\"#\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><circle cx=\"9\" cy=\"21\" r=\"1\"/><circle cx=\"20\" cy=\"21\" r=\"1\"/><path d=\"M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6\"/></svg>Orders</a><a class=\"ds-nav-item\" href=\"#\"><svg width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\"><path d=\"M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2\"/><circle cx=\"9\" cy=\"7\" r=\"4\"/><path d=\"M23 21v-2a4 4 0 0 0-3-3.87\"/><path d=\"M16 3.13a4 4 0 0 1 0 7.75\"/></svg>Customers</a></nav>",
+      "css": ".ds-sidebar { width: 240px; background-color: #FFFFFF; border-right: 1px solid #E2E8F0; padding: 12px 8px; display: flex; flex-direction: column; gap: 2px; } .ds-nav-item { display: flex; align-items: center; gap: 12px; padding: 8px 12px; border-radius: 6px; font-family: Inter, system-ui, sans-serif; font-size: 14px; font-weight: 500; color: #475569; text-decoration: none; transition: background-color 150ms, color 150ms; } .ds-nav-item:hover { background-color: #F1F5F9; color: #0F172A; } .ds-nav-item--active { background-color: #EFF6FF; color: #1D4ED8; }"
+    },
+    {
+      "name": "Mono Value",
+      "kind": "custom",
+      "description": "Currency amounts, order numbers, IDs — always JetBrains Mono.",
+      "html": "<div class=\"ds-mono-demo\"><span class=\"ds-mono-value\">रू 1,500.00</span><span class=\"ds-mono-id\">ORD-2081-00042</span><span class=\"ds-mono-id\">INV-2081/82-000001</span></div>",
+      "css": ".ds-mono-demo { display: flex; flex-direction: column; gap: 8px; } .ds-mono-value { font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: 14px; font-weight: 500; color: #0F172A; } .ds-mono-id { font-family: 'JetBrains Mono', 'Courier New', monospace; font-size: 12px; font-weight: 400; color: #475569; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Dispatch Board",
+    "overview": "Panisewa looks like the screen a delivery operations manager trusts every morning: dense, readable under any light, organized by priority, nothing wasted. White surfaces on a cool slate canvas. Dispatch Blue (#1D4ED8) marks authority — active states, navigation, structural anchors. Action Orange (#EA580C) fires exactly once per view: the primary submit button. Every other element earns its presence through position and weight rather than color. JetBrains Mono carries every number, because money and order IDs demand precision.\n\nThe design is bilingual by construction. Nepali text runs at 17px with a 1.75 line height; Inter-rendered English at 14px with 1.5. The system does not treat Nepali as a localization layer — it is a co-primary script.\n\nThis is a commercial SaaS product competing for adoption against generic admin templates and spreadsheet workflows. Every screen must communicate that the team behind it cares about craft. Not flashy. Not decorated. Earned.",
+    "keyCharacteristics": [
+      "Restrained color: Dispatch Blue structures, Action Orange converts",
+      "Mono for money: all currency, order numbers, IDs in JetBrains Mono",
+      "Bilingual geometry: spacing and line-height accommodate Devanagari without reflows",
+      "Ambient elevation: white surfaces over slate-100; shadows are soft and functional",
+      "Precision over personality: status badges and financial data are exact, not friendly"
+    ],
+    "rules": [
+      { "name": "The One Orange Rule", "body": "Action Orange is forbidden in more than one interactive element per viewport. If two elements compete for primary action, one is wrong.", "section": "colors" },
+      { "name": "The Semantic Fence Rule", "body": "Delivered Green, Transit Amber, and Alert Red are locked to status badges. Using them decoratively violates the system.", "section": "colors" },
+      { "name": "The Mono Money Rule", "body": "Every paisa amount, order number, invoice number, or unique identifier renders in JetBrains Mono. No exceptions.", "section": "typography" },
+      { "name": "The Weight Bridge Rule", "body": "Adjacent type roles must differ by at least one step in weight or size.", "section": "typography" },
+      { "name": "The Ambient Lift Rule", "body": "Cards float at resting state via ambient shadow. Shadows escalate only in response to state, never for decoration.", "section": "elevation" },
+      { "name": "The Outdoor Contrast Rule", "body": "Shadow opacity values are capped at 0.08 for mobile outdoor readability.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do render all currency amounts, order numbers, and IDs in JetBrains Mono",
+      "Do use Dispatch Blue for active/selected states and structural anchors only",
+      "Do reserve Action Orange for the single primary action button per view",
+      "Do use 1.0625rem / 1.75 line-height for all Nepali text via :lang(ne)",
+      "Do wrap data tables in overflow-x-auto inside card containers",
+      "Do use shadow-sm (Ambient) on every card at rest",
+      "Do maintain WCAG AA contrast for all text"
+    ],
+    "donts": [
+      "Don't use Bootstrap/jQuery-era admin patterns: cramped sidebars, DataTables toolbars, gray on gray",
+      "Don't add pastel startup-cute treatments: excessive rounding, bouncy animations, gradient CTAs",
+      "Don't use the SaaS dashboard monoculture: dark sidebar + white content + teal accent + 3-column KPI grid",
+      "Don't apply border-left or border-right greater than 1px as a colored stripe accent",
+      "Don't use gradient text (background-clip: text + gradient)",
+      "Don't use any mono font other than JetBrains Mono for numbers and IDs",
+      "Don't invent new semantic colors outside the established Green/Amber/Red set",
+      "Don't render Nepali text without the Noto Sans Devanagari / Mukta font stack"
+    ]
+  }
+}
