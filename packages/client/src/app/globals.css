@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@media print {
+  @page {
+    size: A4;
+    margin: 12mm 15mm;
+  }
+  body {
+    background: #fff !important;
+  }
+}
+
 @layer base {
   :root {
     --font-sans: var(--font-inter), var(--font-devanagari), var(--font-mukta), system-ui, sans-serif;

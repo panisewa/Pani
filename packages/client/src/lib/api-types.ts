@@ -55,6 +55,17 @@ export interface IProduct {
   createdAt: string
 }
 
+export interface InvoiceItem {
+  id: string
+  productId: string
+  productNameEn: string
+  productNameNe: string
+  quantity: number
+  unitPrice: number
+  depositAmount: number
+  subtotal: number
+}
+
 export interface IInvoice {
   id: string
   invoiceNumber: string
@@ -69,6 +80,10 @@ export interface IInvoice {
   paidAt: string | null
   bsDate: string | null
   createdAt: string
+  pdfUrl?: string
+  customerName?: string
+  customerAddress?: Record<string, string> | null
+  items?: InvoiceItem[]
 }
 
 export interface ITenant {
@@ -86,6 +101,7 @@ export interface ITenant {
     timezone?: string
     address?: string
     phone?: string
+    customDocumentTypes?: boolean
   }
   createdAt: string
 }
