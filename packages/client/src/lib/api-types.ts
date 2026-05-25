@@ -7,10 +7,22 @@ import type {
   InvoiceStatus,
 } from '@panisewa/shared'
 
+export interface IOrderItem {
+  id: string
+  productId: string
+  productNameEn: string
+  productNameNe: string
+  quantity: number
+  unitPrice: number
+  depositAmount: number
+  subtotal: number
+}
+
 export interface IOrder {
   id: string
   orderNumber: string
   customerId: string
+  customerName?: string
   type: CustomerType
   status: OrderStatus
   assignedDriverId: string | null
@@ -24,6 +36,7 @@ export interface IOrder {
   notes: string | null
   createdAt: string
   updatedAt: string
+  items?: IOrderItem[]
 }
 
 export interface ICustomer {

@@ -8,6 +8,7 @@ import { formatPaisa } from '@panisewa/shared'
 import { OrderStatus } from '@panisewa/shared'
 import type { IOrder, PaginatedResponse } from '@/lib/api-types'
 import { NewOrderSheet } from '@/components/orders/new-order-sheet'
+import { OrderDetailSheet } from '@/components/orders/order-detail-sheet'
 import { Plus, Search, ShoppingCart } from 'lucide-react'
 
 const STATUS_STYLES: Record<OrderStatus, string> = {
@@ -47,6 +48,7 @@ export default function OrdersPage() {
   const search = useDeferredValue(searchRaw)
   const [page, setPage] = useState(1)
   const [sheetOpen, setSheetOpen] = useState(false)
+  const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null)
 
   const { data, isLoading, isError, refetch } = useQuery<PaginatedResponse<IOrder>>({
     queryKey: ['orders', statusFilter, page],
@@ -69,6 +71,10 @@ export default function OrdersPage() {
   return (
     <div className="space-y-5">
       <NewOrderSheet open={sheetOpen} onOpenChange={setSheetOpen} />
+      <OrderDetailSheet
+        orderId={selectedOrderId}
+        onOpenChange={(open) => { if (!open) setSelectedOrderId(null) }}
+      />
 
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
@@ -192,6 +198,7 @@ export default function OrdersPage() {
                   return (
                     <tr
                       key={order.id}
+                      onClick={() => setSelectedOrderId(order.id)}
                       className="hover:bg-slate-50 transition-colors duration-100 cursor-pointer"
                     >
                       <td className="px-4 py-3 font-mono font-medium text-slate-900">
