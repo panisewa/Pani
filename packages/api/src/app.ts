@@ -12,6 +12,7 @@ import { customerRouter } from './modules/customer/customer.routes.js'
 import { orderRouter } from './modules/order/order.routes.js'
 import { invoiceRouter } from './modules/invoice/invoice.routes.js'
 import { paymentRouter } from './modules/payment/payment.routes.js'
+import { statsRouter } from './modules/stats/stats.routes.js'
 
 export const app: Application = express()
 
@@ -48,5 +49,6 @@ app.use('/api/v1/customers', customerRouter)
 app.use('/api/v1/orders', orderRouter)
 app.use('/api/v1/invoices', invoiceRouter)
 app.use('/api/v1/payments', paymentRouter)
+app.use('/api/v1/stats', statsRouter)
 
 app.use(errorMiddleware)
